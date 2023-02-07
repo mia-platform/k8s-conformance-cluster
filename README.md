@@ -2,6 +2,36 @@
 
 This Terraform project can be used to create a test environment on GCP to run the [K8s conformance tests](https://www.cncf.io/certification/software-conformance/#how) for the [Mia-Platform distribution](https://github.com/mia-platform/distribution).
 
+## Usage
+
+First off, make sure to configure all the [input variables](#inputs).
+
+Then, run the following commands:
+
+```shell
+terraform init -upgrade
+terraform plan -out=plan.tfplan
+```
+
+The plan should create these [resources](#resources).
+
+Finally, run:
+
+```shell
+terraform apply plan.tfplan
+```
+
+The initialization of the nodes may take a few minutes. You can check the cluster status by connecting to the control plane node via SSH and running:
+
+```shell
+sudo -i
+kubectl get nodes
+```
+
+As soon as the `kubectl get nodes` command outputs all the 3 nodes, the cluster is ready!
+
+You may now connect to the cluster using your preferred method.
+
 ## Pre-commit hooks install
 
 Requisites:
@@ -60,12 +90,12 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_GCP_CREDENTIALS_JSON"></a> [GCP\_CREDENTIALS\_JSON](#input\_GCP\_CREDENTIALS\_JSON) | n/a | `string` | n/a | yes |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | n/a | yes |
-| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | n/a | `string` | n/a | yes |
-| <a name="input_pod_network_cidr"></a> [pod\_network\_cidr](#input\_pod\_network\_cidr) | n/a | `string` | n/a | yes |
-| <a name="input_project"></a> [project](#input\_project) | n/a | `string` | n/a | yes |
-| <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
+| <a name="input_GCP_CREDENTIALS_JSON"></a> [GCP\_CREDENTIALS\_JSON](#input\_GCP\_CREDENTIALS\_JSON) | The absolute path of the JSON file containing the GCP credentials to access your project. | `string` | n/a | yes |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster. | `string` | `"k8s-conformance-cluster"` | no |
+| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | The version of Kubernetes that will run on the cluster. | `string` | `"1.24.10"` | no |
+| <a name="input_pod_network_cidr"></a> [pod\_network\_cidr](#input\_pod\_network\_cidr) | The IP CIDR of the pods in the Kubernetes cluster. | `string` | n/a | yes |
+| <a name="input_project"></a> [project](#input\_project) | The Google project ID. | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | The region where the cluster will be created. | `string` | `"europe-west1"` | no |
 
 ## Outputs
 
