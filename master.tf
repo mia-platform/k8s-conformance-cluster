@@ -22,7 +22,7 @@ resource "google_compute_instance" "master" {
 }
 
 data "template_file" "master_startup" {
-  template = file("${path.root}/master-startup.sh")
+  template = file("${path.root}/templates/master-startup.sh")
   vars = {
     cluster_version  = var.cluster_version
     token            = "${random_string.join_token_first_part.result}.${random_string.join_token_second_part.result}"

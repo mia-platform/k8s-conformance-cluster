@@ -23,7 +23,7 @@ resource "google_compute_instance" "worker" {
 }
 
 data "template_file" "worker_startup" {
-  template = file("${path.root}/worker-startup.sh")
+  template = file("${path.root}/templates/worker-startup.sh")
   vars = {
     cluster_version  = var.cluster_version
     token            = "${random_string.join_token_first_part.result}.${random_string.join_token_second_part.result}"
