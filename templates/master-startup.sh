@@ -53,7 +53,7 @@ oom_score = 0
 EOF
 systemctl daemon-reload --no-block
 systemctl restart containerd --no-block 
-DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm=${cluster_version}-00 kubectl=${cluster_version}-00 kubelet=${cluster_version}-00
+DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm=${cluster_version} kubectl=${cluster_version} kubelet=${cluster_version}
 kubeadm init --pod-network-cidr=${pod_network_cidr} --token=${token} --node-name=$(hostname -f)
 mkdir -p /root/.kube
 cp -i /etc/kubernetes/admin.conf /root/.kube/config

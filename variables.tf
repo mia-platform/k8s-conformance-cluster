@@ -17,7 +17,6 @@ variable "GCP_CREDENTIALS_JSON" {
 variable "cluster_version" {
   type        = string
   description = "The version of Kubernetes that will run on the cluster."
-  default     = "1.24.10"
 }
 
 variable "cluster_name" {

@@ -30,7 +30,7 @@ kubectl get nodes
 
 As soon as the `kubectl get nodes` command outputs all the 3 nodes, the cluster is ready!
 
-You may now connect to the cluster using your preferred method.
+You may now implement your preferred method for accessing the Kubernetes cluster from the outside.
 
 ## Pre-commit hooks install
 
@@ -92,7 +92,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_GCP_CREDENTIALS_JSON"></a> [GCP\_CREDENTIALS\_JSON](#input\_GCP\_CREDENTIALS\_JSON) | The absolute path of the JSON file containing the GCP credentials to access your project. | `string` | n/a | yes |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster. | `string` | `"k8s-conformance-cluster"` | no |
-| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | The version of Kubernetes that will run on the cluster. | `string` | `"1.24.10"` | no |
+| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | The version of Kubernetes that will run on the cluster. | `string` | n/a | yes |
 | <a name="input_pod_network_cidr"></a> [pod\_network\_cidr](#input\_pod\_network\_cidr) | The IP CIDR of the pods in the Kubernetes cluster. | `string` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | The Google project ID. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The region where the cluster will be created. | `string` | `"europe-west1"` | no |
