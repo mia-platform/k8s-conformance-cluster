@@ -1,0 +1,53 @@
+kind: ClustersConfiguration
+apiVersion: vab.mia-platform.eu/v1alpha1
+name: distro-configuration
+spec:
+  modules:
+    ingress/traefik/base:
+      version: v0.2.0
+    cni/cilium/base:
+      version: v0.2.0
+    scheduling/kube-green/base:
+      version: v0.1.0
+    observability/logging-operator/base:
+      version: v0.2.0
+    observability/prometheus-operator/base:
+      version: v0.2.0
+    security/cert-manager/base:
+      version: v0.2.0
+    security/kyverno/base:
+      version: v0.1.0
+    security/rbac-manager/base:
+      version: v0.2.0
+    disaster-recovery/velero/base:
+      version: v0.2.0
+  addOns:
+    cert-manager/kube-green-webhook-certificate:
+      version: v0.1.0
+    cert-manager/prometheus-operator-webhook-certificate:
+      version: v0.1.0
+    logging-operator/logging-stack:
+      version: v0.1.0
+    prometheus-operator/cert-manager:
+      version: v0.1.0
+    prometheus-operator/kube-green:
+      version: v0.1.0
+    prometheus-operator/kyverno:
+      version: v0.1.0
+    prometheus-operator/logging-operator:
+      version: v0.1.0
+    prometheus-operator/logging-stack:
+      version: v0.1.0
+    prometheus-operator/monitoring-stack:
+      version: v0.1.0
+    prometheus-operator/rbac-manager:
+      version: v0.1.0
+    prometheus-operator/traefik:
+      version: v0.1.0
+    prometheus-operator/velero:
+      version: v0.1.0
+  groups:
+  - name: k8s-conformance
+    clusters:
+    - name: k8s-conformance
+      context: k8s-conformance
