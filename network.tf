@@ -10,18 +10,6 @@ resource "google_compute_subnetwork" "vpc_subnetwork" {
   region        = var.region
 }
 
-resource "google_compute_address" "external_ip" {
-  name = "k8s-master-ip"
-}
-
-resource "google_compute_address" "external_ip_1" {
-  name = "k8s-worker-1-ip"
-}
-
-resource "google_compute_address" "external_ip_2" {
-  name = "k8s-worker-2-ip"
-}
-
 resource "google_compute_firewall" "allow_all_internal" {
   name    = "allow-all-internal"
   network = google_compute_network.vpc_network.name
@@ -44,7 +32,7 @@ resource "google_compute_firewall" "allow_ssh" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["k8s-cluster"]
+  target_tags   = ["control-plane"]
 }
 
 resource "google_compute_firewall" "allow_k8s" {
@@ -57,5 +45,5 @@ resource "google_compute_firewall" "allow_k8s" {
   }
 
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["k8s-cluster"]
+  target_tags   = ["control-plane"]
 }

@@ -2,7 +2,7 @@ resource "google_compute_instance" "master" {
   name         = "k8s-control-plane"
   machine_type = "e2-standard-2"
   zone         = "${var.region}-b"
-  tags         = ["k8s-cluster"]
+  tags         = ["k8s-cluster", "control-plane"]
 
   boot_disk {
     initialize_params {
@@ -12,13 +12,10 @@ resource "google_compute_instance" "master" {
 
   network_interface {
     subnetwork = google_compute_subnetwork.vpc_subnetwork.name
-    access_config {
-      nat_ip = google_compute_address.external_ip.address
-    }
+    access_config {}
   }
 
   metadata = {
-    ssh-keys       = "user:${file("~/.ssh/k8s_env_id_rsa.pub")}"
     startup-script = "${data.template_file.master_startup.rendered}"
   }
 

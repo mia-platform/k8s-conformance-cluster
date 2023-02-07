@@ -13,13 +13,10 @@ resource "google_compute_instance" "worker" {
 
   network_interface {
     subnetwork = google_compute_subnetwork.vpc_subnetwork.name
-    access_config {
-      nat_ip = count.index == 0 ? google_compute_address.external_ip_1.address : google_compute_address.external_ip_2.address
-    }
+    access_config {}
   }
 
   metadata = {
-    ssh-keys       = "user:${file("~/.ssh/k8s_env_id_rsa.pub")}"
     startup-script = "${data.template_file.worker_startup.rendered}"
   }
 

@@ -32,7 +32,7 @@ pre-commit run -a
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.51.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 4.52.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.4.3 |
 | <a name="provider_template"></a> [template](#provider\_template) | 2.2.0 |
 
@@ -44,9 +44,6 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [google_compute_address.external_ip](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address) | resource |
-| [google_compute_address.external_ip_1](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address) | resource |
-| [google_compute_address.external_ip_2](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address) | resource |
 | [google_compute_firewall.allow_all_internal](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.allow_k8s](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.allow_ssh](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
