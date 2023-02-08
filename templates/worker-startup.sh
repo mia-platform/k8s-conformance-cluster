@@ -53,7 +53,7 @@ EOF
 systemctl daemon-reload --no-block
 systemctl restart containerd --no-block
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm=${cluster_version}-00 kubectl=${cluster_version}-00 kubelet=${cluster_version}-00
+DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm=${cluster_version} kubectl=${cluster_version} kubelet=${cluster_version}
 for i in `seq 300` ; do
 echo "Trying to join the K8s cluster: attempt $i ..." | systemd-cat
 echo [STARTUP_DEBUG] MASTER PRIVATE IP: ${master_ip} | systemd-cat
