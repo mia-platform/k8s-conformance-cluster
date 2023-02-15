@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# Copyright Mia srl
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -o pipefail
+set -o nounset
+
+# node configuration lifted from
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
+tee /etc/modules-load.d/k8s.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+modprobe overlay
+modprobe br_netfilter
+
+# sysctl params required by setup, params persist across reboots
+tee /etc/sysctl.d/k8s.conf <<EOF
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+
+sysctl --system
+
+# ensure the latest version of the packages installed are available
+DEBIAN_FRONTEND=noninteractive apt-get update -yq && \
+	apt-get upgrade -yq && \
+	apt-get install -yq apt-transport-https curl ca-certificates gnupg lsb-release && \
+	apt-get autoclean -yq && \
+	apt-get autoremove -yq
+
+# setup kubernetes and containerd repository for apt
+mkdir -p /etc/apt/keyrings
+curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+tee /etc/apt/sources.list.d/kubernetes.list << EOF
+deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+tee /etc/apt/sources.list.d/docker.list << EOF
+deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+EOF
+DEBIAN_FRONTEND=noninteractive apt-get update -yq
+
+# install containerd and configure it
+DEBIAN_FRONTEND=noninteractive apt-get install -yq containerd.io
+
+# setup containerd with default config and enable systemd cgroup config
+containerd config default > /etc/containerd/config.toml
+sed -i 's|SystemdCgroup = false|SystemdCgroup = true|g' /etc/containerd/config.toml
+systemctl daemon-reload --no-block
+systemctl restart containerd --no-block
+
+# install kubeadm, kubelet and kubectl
+DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm=${cluster_version} \
+	kubelet=${cluster_version} \
+	kubectl=${cluster_version}
+DEBIAN_FRONTEND=noninteractive apt-mark hold kubeadm kubelet kubectl
+
+# Try to connect to control plane
+for i in $(seq 300) ; do
+	nc "${control_plane_ip}" "6443" -w 1 > /dev/null 2>&1
+	result=$?
+
+	if [ $${result} -eq 0 ] ; then
+		kubeadm join --token="${token}" --discovery-token-unsafe-skip-ca-verification --node-name="$(hostname -f)" "${control_plane_ip}:6443"
+		exit 0
+	fi
+
+	sleep 5
+done
+
+echo "[STARTUP] Unable to join cluster: timeout" >&2 | systemd-cat
+exit 1
