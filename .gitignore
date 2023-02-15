@@ -1,3 +1,8 @@
+# Custom gitignore rules
+
+.terraform.lock.hcl
+*.tfplan
+
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,terraform,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,macos,terraform,visualstudiocode
 
@@ -105,6 +110,3 @@ terraform.rc
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,terraform,visualstudiocode
-
-.terraform.lock.hcl
-*.tfplan
