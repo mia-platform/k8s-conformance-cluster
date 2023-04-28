@@ -39,10 +39,9 @@ sysctl --system
 
 # ensure the latest version of the packages installed are available
 DEBIAN_FRONTEND=noninteractive apt-get update -yq && \
-	apt-get upgrade -yq && \
-	apt-get install -yq apt-transport-https curl ca-certificates gnupg lsb-release && \
-	apt-get autoclean -yq && \
-	apt-get autoremove -yq
+	DEBIAN_FRONTEND=noninteractive apt-get install -yq apt-transport-https curl ca-certificates gnupg lsb-release && \
+	DEBIAN_FRONTEND=noninteractive apt-get autoclean -yq && \
+	DEBIAN_FRONTEND=noninteractive apt-get autoremove -yq
 
 # setup kubernetes and containerd repository for apt
 mkdir -p /etc/apt/keyrings
