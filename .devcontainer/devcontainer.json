@@ -1,15 +1,16 @@
 {
 	"name": "Terraform",
-	"image": "mcr.microsoft.com/vscode/devcontainers/base:0-bullseye",
+	"image": "mcr.microsoft.com/vscode/devcontainers/base:debian",
 	"features": {
-		"ghcr.io/devcontainers/features/terraform:1": {"installTerraformDocs": true}
+		"ghcr.io/devcontainers/features/terraform:1": {
+			"installTerraformDocs": true,
+			"installTFsec": true
+		}
 	},
-	"remoteUser": "vscode",
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"files.eol": "\n",
-				"files.insertFinalNewline": true,
+				"files.insertFinalNewline": false,
 				"files.trimFinalNewlines": true,
 				"files.trimTrailingWhitespace": false
 			},
@@ -17,6 +18,12 @@
 				"editorconfig.editorconfig",
 				"davidanson.vscode-markdownlint",
 				"timonwong.shellcheck"
+			]
+		},
+		"codespaces": {
+			"openFiles": [
+				"README.md",
+				"CONTRIBUTING.md"
 			]
 		}
 	}
