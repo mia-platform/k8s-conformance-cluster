@@ -16,7 +16,7 @@
 resource "google_compute_instance" "worker" {
   count        = var.worker_count
   name         = "k8s-worker-${count.index + 1}"
-  machine_type = "e2-standard-2"
+  machine_type = "e2-standard-4"
   zone         = "${var.region}-b"
   tags = [
     "k8s-worker",
@@ -25,8 +25,15 @@ resource "google_compute_instance" "worker" {
   boot_disk {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2204-lts"
-      size  = 50
+      size  = 100
+      type  = "pd-ssd"
     }
+  }
+
+  shielded_instance_config {
+    enable_secure_boot          = true
+    enable_vtpm                 = true
+    enable_integrity_monitoring = true
   }
 
   network_interface {

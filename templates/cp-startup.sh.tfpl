@@ -45,14 +45,14 @@ DEBIAN_FRONTEND=noninteractive apt-get update -yq && \
 
 # setup kubernetes and containerd repository for apt
 mkdir -p /etc/apt/keyrings
-curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v${cluster_version}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 tee /etc/apt/sources.list.d/kubernetes.list << EOF
-deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${cluster_version}/deb/ /
 EOF
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 tee /etc/apt/sources.list.d/docker.list << EOF
-deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
 EOF
 DEBIAN_FRONTEND=noninteractive apt-get update -yq
 
@@ -66,16 +66,16 @@ systemctl daemon-reload --no-block
 systemctl restart containerd --no-block
 
 # install kubeadm, kubelet and kubectl
-DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm=${cluster_version} \
-	kubelet=${cluster_version} \
-	kubectl=${cluster_version}
+DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm \
+	kubelet \
+	kubectl
 DEBIAN_FRONTEND=noninteractive apt-mark hold kubeadm kubelet kubectl
 
 # setup control-plane
 kubeadm init --pod-network-cidr="${pod_network_cidr}" --token="${token}" --node-name="$(hostname -f)"
 
 # install local storage class provider
-kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.23/deploy/local-path-storage.yaml
+kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.24/deploy/local-path-storage.yaml
 kubectl --kubeconfig /etc/kubernetes/admin.conf patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 # setup kubernetes config for root user

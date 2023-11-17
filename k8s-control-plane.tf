@@ -25,7 +25,14 @@ resource "google_compute_instance" "control_plane" {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2204-lts"
       size  = 50
+      type  = "pd-ssd"
     }
+  }
+
+  shielded_instance_config {
+    enable_secure_boot          = true
+    enable_vtpm                 = true
+    enable_integrity_monitoring = true
   }
 
   network_interface {

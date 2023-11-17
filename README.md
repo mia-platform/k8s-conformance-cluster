@@ -16,7 +16,7 @@ terraform plan -out=plan.tfplan <optional -var flags>
 ```
 
 The plan should create these [resources](#resources), and showing as output the public IP address of the
-control-plane.  
+control-plane.
 
 Finally, run:
 
@@ -62,17 +62,13 @@ pre-commit run -a
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 4.80 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.5 |
+No requirements.
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.80.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.6.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.5.1 |
 
 ## Modules
@@ -83,10 +79,10 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [google_compute_firewall.allow_iap_access](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.allow_node_ports](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.allow_nodes_communication](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.allow_public_access](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
-| [google_compute_firewall.allow_ssh](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_instance.control_plane](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
 | [google_compute_instance.worker](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) | resource |
 | [google_compute_network.network](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network) | resource |
@@ -99,12 +95,12 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_GCP_CREDENTIALS_JSON"></a> [GCP\_CREDENTIALS\_JSON](#input\_GCP\_CREDENTIALS\_JSON) | The absolute path of the JSON file containing the GCP credentials to access your project. | `string` | n/a | yes |
-| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | The version of Kubernetes that will run on the cluster. | `string` | `"1.26*"` | no |
+| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | The version of Kubernetes that will run on the cluster. | `string` | `"1.27"` | no |
 | <a name="input_nodes_network_cidr"></a> [nodes\_network\_cidr](#input\_nodes\_network\_cidr) | The IP CIDR of the Kubernetes clusrter nodes. Default to 172.16.0.0/24 | `string` | `"172.16.0.0/24"` | no |
 | <a name="input_pod_network_cidr"></a> [pod\_network\_cidr](#input\_pod\_network\_cidr) | The IP CIDR of the pods in the Kubernetes cluster. Default to 10.10.0.0/16 | `string` | `"10.10.0.0/16"` | no |
 | <a name="input_project"></a> [project](#input\_project) | The Google project ID. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The region where the cluster will be created. | `string` | `"europe-west1"` | no |
-| <a name="input_worker_count"></a> [worker\_count](#input\_worker\_count) | The number of worker nodes of the cluster. Default to 2 | `number` | `2` | no |
+| <a name="input_worker_count"></a> [worker\_count](#input\_worker\_count) | The number of worker nodes of the cluster. Default to 3 | `number` | `3` | no |
 
 ## Outputs
 

@@ -32,13 +32,13 @@ variable "GCP_CREDENTIALS_JSON" {
 variable "cluster_version" {
   type        = string
   description = "The version of Kubernetes that will run on the cluster."
-  default     = "1.26*"
+  default     = "1.27"
 }
 
 variable "worker_count" {
   type        = number
-  description = "The number of worker nodes of the cluster. Default to 2"
-  default     = 2
+  description = "The number of worker nodes of the cluster. Default to 3"
+  default     = 3
 }
 
 variable "nodes_network_cidr" {

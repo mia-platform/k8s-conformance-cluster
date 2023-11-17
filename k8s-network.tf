@@ -23,9 +23,14 @@ resource "google_compute_subnetwork" "subnetwork" {
   network       = google_compute_network.network.name
   ip_cidr_range = var.nodes_network_cidr
   region        = var.region
+
+  log_config {
+    aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.5
+  }
 }
 
-resource "google_compute_firewall" "allow_ssh" {
+resource "google_compute_firewall" "allow_iap_access" {
   name    = "allow-ssh"
   network = google_compute_network.network.name
 
@@ -33,11 +38,12 @@ resource "google_compute_firewall" "allow_ssh" {
     protocol = "TCP"
     ports = [
       "22",
+      "3389",
     ]
   }
 
   source_ranges = [
-    "0.0.0.0/0",
+    "35.235.240.0/20",
   ]
   target_tags = [
     "k8s-control-plane",
@@ -68,6 +74,13 @@ resource "google_compute_firewall" "allow_node_ports" {
 
   allow {
     protocol = "TCP"
+    ports = [
+      "30000-32767",
+    ]
+  }
+
+  allow {
+    protocol = "UDP"
     ports = [
       "30000-32767",
     ]
