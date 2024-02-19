@@ -59,7 +59,7 @@ pre-commit install --install-hooks
 pre-commit run -a
 ```
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -72,7 +72,7 @@ pre-commit run -a
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 5.10.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.16.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
 
 ## Modules
@@ -111,7 +111,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_control_plane_public_ip"></a> [control\_plane\_public\_ip](#output\_control\_plane\_public\_ip) | The public IP for connecting to the cluster control plane |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
 
 [K8s conformance tests]: https://www.cncf.io/certification/software-conformance/#how
 [Mia-Platform distribution]: https://github.com/mia-platform/distribution
