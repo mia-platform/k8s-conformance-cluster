@@ -24,15 +24,10 @@ variable "project" {
   description = "The Google project ID."
 }
 
-variable "GCP_CREDENTIALS_JSON" {
-  type        = string
-  description = "The absolute path of the JSON file containing the GCP credentials to access your project."
-}
-
 variable "cluster_version" {
   type        = string
   description = "The version of Kubernetes that will run on the cluster."
-  default     = "1.28"
+  default     = "1.29"
 }
 
 variable "worker_count" {
