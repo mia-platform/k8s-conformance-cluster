@@ -20,39 +20,31 @@ set -o nounset
 
 # node configuration lifted from
 # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#install-and-configure-prerequisites
-tee /etc/modules-load.d/k8s.conf <<EOF
-overlay
-br_netfilter
-EOF
-
-modprobe overlay
-modprobe br_netfilter
-
 # sysctl params required by setup, params persist across reboots
-tee /etc/sysctl.d/k8s.conf <<EOF
-net.bridge.bridge-nf-call-iptables  = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-net.ipv4.ip_forward                 = 1
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.ipv4.ip_forward = 1
 EOF
 
-sysctl --system
+# Apply sysctl params without reboot
+sudo sysctl --system
 
 # ensure the latest version of the packages installed are available
 DEBIAN_FRONTEND=noninteractive apt-get update -yq && \
-	DEBIAN_FRONTEND=noninteractive apt-get install -yq apt-transport-https curl ca-certificates gnupg lsb-release && \
+	DEBIAN_FRONTEND=noninteractive apt-get install -yq apt-transport-https ca-certificates curl gpg && \
 	DEBIAN_FRONTEND=noninteractive apt-get autoclean -yq && \
 	DEBIAN_FRONTEND=noninteractive apt-get autoremove -yq
 
 # setup kubernetes and containerd repository for apt
 mkdir -p /etc/apt/keyrings
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v${cluster_version}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL --proto '=https' --tlsv1.2 https://pkgs.k8s.io/core:/stable:/v${cluster_version}/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 tee /etc/apt/sources.list.d/kubernetes.list << EOF
 deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v${cluster_version}/deb/ /
 EOF
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+curl -fsSL --proto '=https' --tlsv1.2 https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
 tee /etc/apt/sources.list.d/docker.list << EOF
-deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$${VERSION_CODENAME}") stable
 EOF
 DEBIAN_FRONTEND=noninteractive apt-get update -yq
 
@@ -71,14 +63,18 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y kubeadm \
 	kubectl
 DEBIAN_FRONTEND=noninteractive apt-mark hold kubeadm kubelet kubectl
 
-# setup control-plane
-kubeadm init --pod-network-cidr="${pod_network_cidr}" --token="${token}" --node-name="$(hostname -f)"
+# Try to connect to control plane
+for i in $(seq 300) ; do
+	nc "${control_plane_ip}" "6443" -w 1 > /dev/null 2>&1
+	result=$?
 
-# install local storage class provider
-kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.24/deploy/local-path-storage.yaml
-kubectl --kubeconfig /etc/kubernetes/admin.conf patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+	if [ $${result} -eq 0 ] ; then
+		kubeadm join --token="${token}" --discovery-token-unsafe-skip-ca-verification --node-name="$(hostname -f)" "${control_plane_ip}:6443"
+		exit 0
+	fi
 
-# setup kubernetes config for root user
-mkdir -p /root/.kube
-cp -i /etc/kubernetes/admin.conf /root/.kube/config
-chown root:root /root/.kube/config
+	sleep 5
+done
+
+echo "[STARTUP] Unable to join cluster: timeout" >&2 | systemd-cat
+exit 1

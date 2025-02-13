@@ -42,11 +42,10 @@ resource "google_compute_instance" "worker" {
   }
 
   metadata = {
-    startup-script = templatefile("${path.module}/templates/worker-startup.sh.tfpl", {
+    startup-script = templatefile("${path.module}/templates/worker-startup.sh.tftpl", {
       cluster_version  = var.cluster_version
       token            = "${random_string.join_token_first_part.result}.${random_string.join_token_second_part.result}"
       control_plane_ip = "${google_compute_instance.control_plane.network_interface.0.network_ip}"
-      pod_network_cidr = var.pod_network_cidr
     })
   }
 }
