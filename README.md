@@ -72,8 +72,8 @@ pre-commit run -a
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 6.25.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.7.1 |
+| <a name="provider_google"></a> [google](#provider\_google) | 6.36.1 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
 
 ## Modules
 
@@ -98,7 +98,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | The version of Kubernetes that will run on the cluster. | `string` | `"1.31"` | no |
+| <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | The version of Kubernetes that will run on the cluster. | `string` | `"1.32"` | no |
 | <a name="input_nodes_network_cidr"></a> [nodes\_network\_cidr](#input\_nodes\_network\_cidr) | The IP CIDR of the Kubernetes clusrter nodes. Default to 172.16.0.0/24 | `string` | `"172.16.0.0/24"` | no |
 | <a name="input_pod_network_cidr"></a> [pod\_network\_cidr](#input\_pod\_network\_cidr) | The IP CIDR of the pods in the Kubernetes cluster. Default to 10.10.0.0/16 | `string` | `"10.10.0.0/16"` | no |
 | <a name="input_project"></a> [project](#input\_project) | The Google project ID. | `string` | n/a | yes |

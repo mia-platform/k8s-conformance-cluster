@@ -27,7 +27,7 @@ variable "project" {
 variable "cluster_version" {
   type        = string
   description = "The version of Kubernetes that will run on the cluster."
-  default     = "1.31"
+  default     = "1.32"
 }
 
 variable "worker_count" {
