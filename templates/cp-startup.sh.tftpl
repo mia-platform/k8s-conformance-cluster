@@ -67,7 +67,7 @@ DEBIAN_FRONTEND=noninteractive apt-mark hold kubeadm kubelet kubectl
 kubeadm init --pod-network-cidr="${pod_network_cidr}" --token="${token}" --node-name="$(hostname -f)"
 
 # install local storage class provider
-kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.31/deploy/local-path-storage.yaml
+kubectl --kubeconfig /etc/kubernetes/admin.conf apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/v0.0.32/deploy/local-path-storage.yaml
 kubectl --kubeconfig /etc/kubernetes/admin.conf patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
 # setup kubernetes config for root user
