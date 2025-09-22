@@ -5,7 +5,7 @@ for the [Mia-Platform distribution].
 
 ## Usage
 
-The projects requires a minimal set of configuration as input of the terraform module that you can see [here](#inputs),
+The projects requires a minimal set of configuration as [input of the terraform module](#inputs),
 you can choose to set them via flags or via a `terraform.auto.tfvars` file.
 
 When you have the values that you want to set, run the following commands:
@@ -65,14 +65,14 @@ pre-commit run -a
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 6 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 7 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.7 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 6.49.2 |
+| <a name="provider_google"></a> [google](#provider\_google) | 7.3.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.7.2 |
 
 ## Modules

@@ -16,6 +16,7 @@ MD029:
   style: one
 MD033:
   allowed_elements:
+  - a
   - center
 MD046:
   style: fenced
